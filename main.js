@@ -6,6 +6,8 @@ let score = document.querySelector('#score');
 let cards = document.querySelector('#cards');
 // Step 1d - Select and store the message element
 let message = document.querySelector('#message');
+// for css styling - Select and store the playerHighlight element
+let playerHighlight = document.querySelector('#playerHighlight');
 
 let selectedCard = 0;
 
@@ -65,7 +67,7 @@ function createCardElements() {
 
     // Step 3c - Add a data value to the card with the card's value in it
     cardEle.dataset.value = card;
-    cardEle.firstChild.textContent = cardEle.dataset.value;
+    
     // Step 3c - Bind the cardSelected function
     // to the click event on the cardEle
     cardEle.addEventListener('click', cardSelected);
@@ -73,27 +75,40 @@ function createCardElements() {
   }
 }
 
+// populate board
 createCardElements();
+
+message.textContent = `${currentPlayer.name}, please choose a card!`;
+
+
+//message.textContent = `${highlightPlayer(currentPlayer.name)}, please choose a card!`;
+//message.appendChild(highlightPlayer(currentPlayer))
 // Step 5 - Create a function to store the logic
 // for when a card is selected
 function cardSelected (event)  { //alert(event.target.dataset.value); console.log(event.target.dataset.value)}
   // Step 5a - Check if there is already a card selected
-
+  
   if (currentCard != 0) {
+    flipCardFaceUp(event.target)
     // Step 6 - Compare the cards
     if (currentCard.dataset.value === event.target.dataset.value) {
       // Step 6b - Add a class to the 2 card elements
       // flipping them over
-      currentCard.classList.add('flipped');
-      event.target.classList.add('flipped');
-
+      // currentCard.classList.add('flipped');
+      // currentCard.firstChild.textContent = currentCard.dataset.value;
+      flipCardFaceUp(currentCard)
+      currentCard.removeEventListener('click', cardSelected);
+      // event.target.classList.add('flipped');
+      // event.target.firstChild.textContent = event.target.dataset.value;
+      flipCardFaceUp(event.target);
+      event.target.removeEventListener('click', cardSelected)
       // Step 6c - Add a point to the score for this player
       currentPlayer.score += 1;
       updateScores();
       // Step 6d - Tell the player to go again
       // (use string interpolation to show which player you're addressing)
       
-      message.textContent = `Congratulations! ${currentPlayer.name}, please go again!`;
+      message.textContent = `Congratulations! ${playerHighlight.textContent = currentPlayer.name}, please go again!`;
 
       currentCard = 0;
       isBoardFull();
@@ -103,24 +118,26 @@ function cardSelected (event)  { //alert(event.target.dataset.value); console.lo
       // Step 6e - Provide a fail message to the player
       message.textContent = "Oh, so sorry!!! But yer' not psychic!";
 
-      setTimeout(function() {
+      setTimeout(function() {        
         // Step 6f - Using a ternary, change players
+        flipCardFaceDown(event.target);
+        flipCardFaceDown(currentCard);        
         currentPlayer = (currentPlayer === players[0]) ? players[1] : players[0];
         // Step 6g - Concatenate a message to the message element
         // advising player 2 that it's their turn now
         // (use string interpolation to show which player you're addressing)
-        message.textContent = ` ${currentPlayer.name}, your turn!`;
-        
-      }, 2000);
-      currentCard = 0;
+        message.textContent = ` ${playerHighlight.textContent = currentPlayer.name}, your turn!`;     
+        currentCard = 0;   
+      }, 1000);      
       return;
     }
   } else {
     // Step 5b - Assign the card to currentCard
     currentCard = event.target;
+    flipCardFaceUp(currentCard);
     // Step 5c - Tell the player to select another card
     // (use string interpolation to show which player you're addressing)
-    message.textContent = `${currentPlayer.name}, please select another card`;
+    message.textContent = `${playerHighlight.textContent = currentPlayer.name}, please select another card`;
   }
 }
 
@@ -156,6 +173,24 @@ function clearGameBoard() {
   }
 }
 
+function flipCardFaceUp(card) {
+  card.classList.add('flipped');
+  card.firstChild.textContent = card.dataset.value;
+}
+
+function flipCardFaceDown(card) {
+  card.classList.remove('flipped');
+  card.firstChild.textContent = "";
+}
+
+function highlightPlayer(playerName) {  
+  let newEle = document.createElement('span')
+  newEle.textContent = playerName;
+  newEle.setAttribute('id', 'playerHighlight');
+  return newEle
+  //parent.appendChild(newEle);
+}
+
 // Take it further - Reset the board allowing the user to play again (Worth 20% of the final grade)
 
   // Step 1 - You will need a reset button in index.html
@@ -173,7 +208,7 @@ function clearGameBoard() {
     createCardElements();
     currentCard = 0;
     // Step 4 - You will need to reset the messages
-    message.textContent = "";
+    message.textContent = `${currentPlayer.name}, please choose a card!`;
     // Step 5 - You will need to reset the players
     resetPlayers();
     updateScores();
