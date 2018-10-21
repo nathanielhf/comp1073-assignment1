@@ -40,7 +40,8 @@ shuffleDeck();
 
 // Step 3a - Create an array to store 2 players
 //let players = ['Player One', 'Player Two'];
-let players = [{name: 'Player One', score : 0}, {name: 'Player Two', score : 0}];
+let players = [];
+resetPlayers();
 
 // Step 3b - Create a variable to store the current player
 let currentPlayer = players[0];
@@ -48,27 +49,31 @@ let currentPlayer = players[0];
 // Step 3c - Create a variable to store the first selected card
 let currentCard = 0;
 
+// populate score area with values
+updateScores();
 
-// Step 4 - Iterate through the deck and bind a click event to each one
-for (let card of deck) {
-  //console.log(card)
-  // Step 4a - Create a new div element to be a card
-  let cardEle = document.createElement('div');
-  // add element to display value when flipped
-  cardEle.appendChild(document.createElement('p'))
-  // Step 3b - Add a 'card' class to the class list on the new div element
-  cardEle.classList.add('card');
+function createCardElements() {
+  // Step 4 - Iterate through the deck and bind a click event to each one
+  for (let card of deck) {
+    //console.log(card)
+    // Step 4a - Create a new div element to be a card
+    let cardEle = document.createElement('div');
+    // add element to display value when flipped
+    cardEle.appendChild(document.createElement('p'))
+    // Step 3b - Add a 'card' class to the class list on the new div element
+    cardEle.classList.add('card');
 
-  // Step 3c - Add a data value to the card with the card's value in it
-  cardEle.dataset.value = card;
-  cardEle.firstChild.textContent = cardEle.dataset.value;
-  // Step 3c - Bind the cardSelected function
-  // to the click event on the cardEle
-  cardEle.addEventListener('click', cardSelected);
-  cards.appendChild(cardEle);
+    // Step 3c - Add a data value to the card with the card's value in it
+    cardEle.dataset.value = card;
+    cardEle.firstChild.textContent = cardEle.dataset.value;
+    // Step 3c - Bind the cardSelected function
+    // to the click event on the cardEle
+    cardEle.addEventListener('click', cardSelected);
+    cards.appendChild(cardEle);
+  }
 }
 
-
+createCardElements();
 // Step 5 - Create a function to store the logic
 // for when a card is selected
 function cardSelected (event)  { //alert(event.target.dataset.value); console.log(event.target.dataset.value)}
@@ -84,17 +89,16 @@ function cardSelected (event)  { //alert(event.target.dataset.value); console.lo
 
       // Step 6c - Add a point to the score for this player
       currentPlayer.score += 1;
-
+      updateScores();
       // Step 6d - Tell the player to go again
       // (use string interpolation to show which player you're addressing)
-      console.log('before congrats and reset ' + currentCard)
-      console.log('testboi before congrats and reset ' + testboi)
+      
       message.textContent = `Congratulations! ${currentPlayer.name}, please go again!`;
 
       currentCard = 0;
-      console.log('after congrats and reset ' + currentCard)
-      isBoardFull;
+      isBoardFull();
       return;
+      
     } else {
       // Step 6e - Provide a fail message to the player
       message.textContent = "Oh, so sorry!!! But yer' not psychic!";
@@ -112,7 +116,6 @@ function cardSelected (event)  { //alert(event.target.dataset.value); console.lo
       return;
     }
   } else {
-
     // Step 5b - Assign the card to currentCard
     currentCard = event.target;
     // Step 5c - Tell the player to select another card
@@ -123,8 +126,8 @@ function cardSelected (event)  { //alert(event.target.dataset.value); console.lo
 
 function isBoardFull() {
   // Step 7 - Check if the board is full
-  if (document.querySelectorAll('.flipped').length === 2) {
-  //if (document.querySelectorAll('.flipped').length === deck.length) {
+  //if (document.querySelectorAll('.flipped').length === 2) {
+  if (document.querySelectorAll('.flipped').length === deck.length) {
     // Step 7a - Check if one of the players has won
     if (players[0].score !== players[1].score) {
       let winner = (players[0].score > players[1].score) ? players[0] : players[1];
@@ -137,13 +140,42 @@ function isBoardFull() {
     }
   }
 }
+
+function updateScores() {
+  score.textContent = `${players[0].name}'s Score: ${players[0].score} | ${players[1].name}'s Score: ${players[1].score}`;
+}
+
+function resetPlayers() {
+  players = [{name: 'Player One', score : 0}, {name: 'Player Two', score : 0}]
+}
+
+function clearGameBoard() {
+
+  while(cards.firstChild) {
+    cards.removeChild(cards.firstChild);
+  }
+}
+
 // Take it further - Reset the board allowing the user to play again (Worth 20% of the final grade)
-/*
-  Step 1 - You will need a reset button in index.html
-  Step 2 - You will need to bind an event listener
-           that detects the click and executes a function
-  Step 3 - You will need to reset all the pieces on the
-           board
-  Step 4 - You will need to reset the messages
-  Step 5 - You will need to reset the players
-*/
+
+  // Step 1 - You will need a reset button in index.html
+  let resetBtn = document.querySelector('#reset');
+  // Step 2 - You will need to bind an event listener
+  //          that detects the click and executes a function
+  resetBtn.addEventListener('click', resetGame);
+
+  function resetGame() {
+    console.log('resetgame fired')
+    // Step 3 - You will need to reset all the pieces on the
+    //          board
+    clearGameBoard();
+    shuffleDeck();
+    createCardElements();
+    currentCard = 0;
+    // Step 4 - You will need to reset the messages
+    message.textContent = "";
+    // Step 5 - You will need to reset the players
+    resetPlayers();
+    updateScores();
+    currentPlayer = players[0];
+  }
