@@ -1,10 +1,17 @@
 /* Step 1 - Add a nice background */
 body {
+    background: #ADA996;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #EAEAEA, #DBDBDB, #F2F2F2, #ADA996);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #EAEAEA, #DBDBDB, #F2F2F2, #ADA996); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */   
+}
 
+.container, #gameboard {
+    text-align: center;
 }
 
 #cards {
-    width: 800px;
+    width: 80%;
+    margin: auto;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -13,9 +20,11 @@ body {
 
 /* Step 2 - Add a nice card style */
 .card {
-    height: 50px;
+    height: 100px;
     width: 7%;
-    border: 1px solid black;
+    background: #C23F38;
+    border: 2px solid goldenrod;
+    border-radius: 5px;
     margin-bottom: 5px;
     position: relative;
 }
@@ -26,12 +35,11 @@ body {
 
 /* Step 3 - Add a nice hover effect */
 .card:hover {
-
+    background: #ED4337;
 }
 
 /* Step 4 (+4 points) - Write a style for a flipped card */
-.flipped {
-    content: attr(data-content);
+.flipped, .flipped:hover {
     background: #666;
 }
 
