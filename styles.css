@@ -1,0 +1,48 @@
+/* Step 1 - Add a nice background */
+body {
+
+}
+
+#cards {
+    width: 800px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+/* Step 2 - Add a nice card style */
+.card {
+    height: 50px;
+    width: 7%;
+    border: 1px solid black;
+    margin-bottom: 5px;
+    position: relative;
+}
+
+.card p {
+    position: absolute;
+}
+
+/* Step 3 - Add a nice hover effect */
+.card:hover {
+
+}
+
+/* Step 4 (+4 points) - Write a style for a flipped card */
+.flipped {
+    content: attr(data-content);
+    background: #666;
+}
+
+/* Step 5 - Add a nice style to the message element */
+#message {
+
+}
+
+/* Step 6 - Add 5 more style changes... */
+/* 1) */
+/* 2) */
+/* 3) */
+/* 4) */
+/* 5) */
